@@ -35,5 +35,7 @@ output/
 !/data/raw/
 !/NOTES_BAO_VE.md
 
-data/
-*.json
+data/raw/raw_data.json
+data/process_data/*.json
+data/test_data.json
+data/train_data.json
