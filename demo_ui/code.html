@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Synthetix AI | Text Classifier</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-secondary-fixed": "#12183d",
+              "surface-bright": "#f8f9ff",
+              "on-tertiary-container": "#ffc7a2",
+              "secondary-fixed-dim": "#bec4f2",
+              "tertiary-fixed": "#ffdcc6",
+              "on-primary-container": "#cacfff",
+              "secondary-fixed": "#dee0ff",
+              "inverse-on-surface": "#ebf1ff",
+              "on-background": "#0d1c2f",
+              "primary": "#24389c",
+              "tertiary-fixed-dim": "#ffb784",
+              "primary-fixed-dim": "#bac3ff",
+              "outline": "#757684",
+              "on-surface-variant": "#454652",
+              "surface-tint": "#4355b9",
+              "surface-container": "#e6eeff",
+              "tertiary": "#6c3400",
+              "surface-container-low": "#eff4ff",
+              "on-secondary-container": "#51577f",
+              "on-tertiary-fixed": "#301400",
+              "surface-dim": "#ccdbf4",
+              "on-primary-fixed-variant": "#293ca0",
+              "inverse-surface": "#233144",
+              "secondary": "#565c84",
+              "on-primary": "#ffffff",
+              "primary-fixed": "#dee0ff",
+              "on-primary-fixed": "#00105c",
+              "primary-container": "#3f51b5",
+              "surface-variant": "#d5e3fd",
+              "surface-container-lowest": "#ffffff",
+              "error": "#ba1a1a",
+              "on-secondary-fixed-variant": "#3e446b",
+              "on-secondary": "#ffffff",
+              "outline-variant": "#c5c5d4",
+              "surface-container-highest": "#d5e3fd",
+              "tertiary-container": "#8f4700",
+              "background": "#f8f9ff",
+              "on-error-container": "#93000a",
+              "on-tertiary-fixed-variant": "#713700",
+              "secondary-container": "#c9cffd",
+              "inverse-primary": "#bac3ff",
+              "surface": "#f8f9ff",
+              "on-error": "#ffffff",
+              "surface-container-high": "#dde9ff",
+              "on-surface": "#0d1c2f",
+              "error-container": "#ffdad6",
+              "on-tertiary": "#ffffff"
+            },
+            fontFamily: {
+              "headline": ["Manrope", "sans-serif"],
+              "body": ["Manrope", "sans-serif"],
+              "label": ["Manrope", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body { font-family: 'Manrope', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 bg-[#f8f9ff]/80 backdrop-blur-xl flex justify-between items-center px-6 h-16 w-full">
+<div class="flex items-center gap-8">
+<span class="text-xl font-bold tracking-tighter text-[#0d1c2f]">Synthetix AI</span>
+
+</div>
+
+<div class="bg-[#eff4ff] h-[1px] w-full absolute bottom-0 left-0"></div>
+</header>
+<!-- SideNavBar -->
+<aside class="h-full w-64 fixed left-0 top-16 bg-[#f8f9ff] flex flex-col p-4 gap-2 border-r border-transparent">
+<div class="flex items-center gap-3 px-3 py-4 mb-4">
+<div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white">
+<span class="material-symbols-outlined">psychology</span>
+</div>
+<div>
+<h3 class="font-bold text-[#0d1c2f] leading-none">Text Engine</h3>
+<p class="text-[10px] text-secondary font-medium tracking-wider uppercase mt-1">V2.4 Active</p>
+</div>
+</div>
+<nav class="flex flex-col gap-1 flex-1">
+<a class="flex items-center gap-3 px-4 py-3 text-[#565c84] hover:bg-[#eff4ff] hover:translate-x-1 transition-all rounded-xl font-manrope text-sm font-medium" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+                Dashboard
+            </a>
+<!-- Active Tab: Classifier -->
+<a class="flex items-center gap-3 px-4 py-3 bg-[#ffffff] text-[#24389c] shadow-[0px_12px_32px_rgba(13,28,47,0.06)] rounded-xl font-manrope text-sm font-medium transition-all" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">segment</span>
+                Classifier
+            </a>
+
+</nav>
+<div class="mt-auto flex flex-col gap-1 border-t border-surface-container pt-4">
+
+<a class="flex items-center gap-3 px-4 py-3 text-error hover:bg-error-container/20 transition-all rounded-xl font-manrope text-sm font-medium" href="#">
+<span class="material-symbols-outlined">logout</span>
+                Sign Out
+            </a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 pt-16 min-h-screen">
+<div class="max-w-7xl mx-auto p-8">
+<!-- Page Header -->
+<header class="mb-12">
+<h1 class="text-4xl font-extrabold text-on-surface tracking-tighter mb-2">Text Classification Engine</h1>
+<p class="text-secondary body-lg">Analyze sentiment, intent, and entities with multi-label deep learning models.</p>
+</header>
+<!-- Bento Layout Content -->
+<div class="grid grid-cols-12 gap-8">
+<!-- Input Section (Left Span) -->
+<section class="col-span-12 lg:col-span-7 flex flex-col gap-8">
+<!-- Input Card -->
+<div class="bg-surface-container-lowest rounded-xl p-8 shadow-[0px_12px_32px_rgba(13,28,47,0.04)]">
+<label class="block text-xs font-bold uppercase tracking-widest text-secondary mb-4">Input Text or URL</label>
+<textarea id="inputText" class="w-full h-48 bg-surface-container-low border-none rounded-xl p-6 text-on-surface placeholder:text-outline/50 focus:ring-2 focus:ring-primary-container transition-all resize-none" placeholder="Paste your content here to begin analysis..."></textarea>
+<div class="flex items-center justify-between mt-6">
+<div class="flex gap-2">
+<button class="px-4 py-2 rounded-lg bg-surface-container-high text-on-primary-fixed-variant text-sm font-semibold flex items-center gap-2 hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-lg">link</span>
+                                    Fetch URL
+                                </button>
+<button class="px-4 py-2 rounded-lg bg-surface-container-high text-on-primary-fixed-variant text-sm font-semibold flex items-center gap-2 hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-lg">upload_file</span>
+                                    Upload File
+                                </button>
+</div>
+<button id="runBtn" onclick="runClassification()" class="bg-gradient-to-r from-primary to-primary-container text-white px-8 py-3 rounded-full font-bold shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all">
+                                Run Classification
+                            </button>
+</div>
+</div>
+<!-- History / Recent Snippets -->
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-surface-container-low rounded-xl p-6 hover:bg-surface-container transition-colors cursor-pointer group">
+<span class="material-symbols-outlined text-primary mb-3">history</span>
+<h4 class="font-bold text-on-surface">Customer Feedback A</h4>
+<p class="text-sm text-secondary line-clamp-2 mt-1">"The service was exceptional, but the delivery time could be improved..."</p>
+</div>
+<div class="bg-surface-container-low rounded-xl p-6 hover:bg-surface-container transition-colors cursor-pointer group">
+<span class="material-symbols-outlined text-primary mb-3">article</span>
+<h4 class="font-bold text-on-surface">News Digest 04</h4>
+<p class="text-sm text-secondary line-clamp-2 mt-1">"Global markets showed resilience today as central banks hinted..."</p>
+</div>
+</div>
+</section>
+<!-- Results Section (Right Span) -->
+<aside class="col-span-12 lg:col-span-5 flex flex-col gap-8">
+<!-- Analysis Results Card -->
+<div class="bg-surface-container-lowest rounded-xl p-8 shadow-[0px_12px_32px_rgba(13,28,47,0.04)]">
+<div class="flex items-center justify-between mb-8">
+<h3 class="text-xl font-bold text-on-surface tracking-tight">Classification Results</h3>
+<span id="topConfidence" class="px-3 py-1 bg-surface-container-highest text-primary text-xs font-bold rounded-full">--</span>
+</div>
+<!-- Multi-label Result Rows -->
+<div class="space-y-6" id="resultsContainer">
+    <div class="text-secondary text-sm italic">Waiting for input...</div>
+</div>
+<div class="mt-8 pt-6 border-t border-surface-container">
+<div class="flex items-center gap-4">
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full border-2 border-white bg-surface-container-high flex items-center justify-center text-[10px] font-bold">ML</div>
+<div class="w-8 h-8 rounded-full border-2 border-white bg-surface-container-high flex items-center justify-center text-[10px] font-bold">DL</div>
+<div class="w-8 h-8 rounded-full border-2 border-white bg-surface-container-high flex items-center justify-center text-[10px] font-bold">NLP</div>
+</div>
+<p class="text-xs text-secondary font-medium">Analyzed via 3 Ensemble Models</p>
+</div>
+</div>
+</div>
+</aside>
+</div>
+<!-- Footer Meta -->
+<footer class="mt-20 flex justify-between items-center py-8 border-t border-surface-container">
+<div class="flex gap-8">
+</div>
+<div class="flex gap-4">
+<span class="text-xs font-bold text-[#24389c] cursor-pointer">API Keys</span>
+<span class="text-xs font-bold text-[#24389c] cursor-pointer">SDK Logs</span>
+</div>
+</footer>
+</div>
+</main>
+<!-- Floating Action for Mobile -->
+<button class="md:hidden fixed bottom-6 right-6 w-14 h-14 bg-primary text-white rounded-full shadow-2xl flex items-center justify-center active:scale-95 transition-transform z-50">
+<span class="material-symbols-outlined">add</span>
+</button>
+
+<script>
+async function runClassification() {
+    const text = document.getElementById('inputText').value;
+    if (!text.trim()) {
+        alert("Please enter some text to analyze.");
+        return;
+    }
+
+    const runBtn = document.getElementById('runBtn');
+    runBtn.innerText = "Analyzing...";
+    runBtn.disabled = true;
+
+    try {
+        const response = await fetch('http://localhost:8000/api/predict', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        
+        // Render results
+        const container = document.getElementById('resultsContainer');
+        container.innerHTML = '';
+        
+        let highestProb = 0;
+        let highestLabel = "";
+
+        // Combine Top 1 L1, L2, L3 and render them as rows
+        const topResults = [];
+        if (data.l1 && data.l1.length > 0) {
+            topResults.push({...data.l1[0], level: 'L1'});
+            highestProb = Math.max(highestProb, data.l1[0].prob);
+            highestLabel = data.l1[0].label;
+        }
+        if (data.l2 && data.l2.length > 0) {
+            topResults.push({...data.l2[0], level: 'L2'});
+        }
+        if (data.l3 && data.l3.length > 0) {
+            topResults.push({...data.l3[0], level: 'L3'});
+        }
+
+        topResults.forEach(item => {
+            const perc = Math.round(item.prob * 100);
+            const isPrimary = (item.level === 'L1') ? 'bg-primary' : (item.level === 'L2' ? 'bg-primary-container' : 'bg-outline-variant/30');
+            
+            container.innerHTML += `
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="font-bold text-sm text-on-surface">${item.label} (${item.level})</span>
+                        <span class="text-xs font-bold text-secondary">${perc}%</span>
+                    </div>
+                    <div class="h-2 w-full bg-surface-container-low rounded-full overflow-hidden">
+                        <div class="h-full ${isPrimary} rounded-full" style="width: ${perc}%"></div>
+                    </div>
+                </div>
+            `;
+        });
+
+        // Update top confidence
+        document.getElementById('topConfidence').innerText = `${Math.round(highestProb * 100)}% Confidence`;
+
+    } catch (error) {
+        console.error("Fetch error:", error);
+        alert("Failed to analyze text. Is the backend server running?");
+    } finally {
+        runBtn.innerText = "Run Classification";
+        runBtn.disabled = false;
+    }
+}
+</script>
+</body></html>
