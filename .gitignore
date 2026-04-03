@@ -1,39 +1,89 @@
+# ============================================================
 # Python
+# ============================================================
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+*.spec
 
-# Virtual environment
+# ============================================================
+# Virtual Environment
+# ============================================================
 .venv/
 venv/
 env/
+ENV/
 
-# Jupyter
-.ipynb_checkpoints/
-
-# OS
-.DS_Store
-Thumbs.db
-desktop.ini
-
-# IDE
+# ============================================================
+# IDE & Editor
+# ============================================================
 .vscode/
 .idea/
 *.swp
 *.swo
+*~
+.project
+.pydevproject
+.settings/
 
-# Large data files (generated, too big for git)
+# ============================================================
+# Jupyter Notebook
+# ============================================================
+.ipynb_checkpoints/
+
+# ============================================================
+# Hệ điều hành
+# ============================================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ============================================================
+# Biến môi trường & Bảo mật
+# ============================================================
+.env
+.env.local
+.env.*.local
+*.secret
+credentials.json
+secrets/
+
+# ============================================================
+# Log & File tạm
+# ============================================================
+*.log
+*.tmp
+*.bak
+*.cache
+logs/
+temp/
+
+# ============================================================
+# Dữ liệu lớn (tự sinh, quá nặng để đưa lên Git)
+# ============================================================
+/data/raw_data.json
 /data/train_data.json
 /data/test_data.json
+data/process_data/dataset.json
 
-# Model outputs & artifacts (keep checkpoints & figures, ignore word2vec)
-/output/models/word2vec.model
-/output/log/
+# ============================================================
+# Model & Artifact (tự sinh, huấn luyện lại để tái tạo)
+# ============================================================
+output/models/
+output/log/
 
-# Temporary files
-*.tmp
-*.log
-*.bak
-data/
+# ============================================================
+# File trung gian (tự sinh trong quá trình chạy)
+# ============================================================
+data/process_data/vocab.json
+data/process_data/label_map.json

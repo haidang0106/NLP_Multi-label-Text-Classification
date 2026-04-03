@@ -102,10 +102,6 @@
 </div>
 </div>
 <nav class="flex flex-col gap-1 flex-1">
-<a class="flex items-center gap-3 px-4 py-3 text-[#565c84] hover:bg-[#eff4ff] hover:translate-x-1 transition-all rounded-xl font-manrope text-sm font-medium" href="#">
-<span class="material-symbols-outlined">dashboard</span>
-                Dashboard
-            </a>
 <!-- Active Tab: Classifier -->
 <a class="flex items-center gap-3 px-4 py-3 bg-[#ffffff] text-[#24389c] shadow-[0px_12px_32px_rgba(13,28,47,0.06)] rounded-xl font-manrope text-sm font-medium transition-all" href="#">
 <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">segment</span>
@@ -138,32 +134,9 @@
 <label class="block text-xs font-bold uppercase tracking-widest text-secondary mb-4">Input Text or URL</label>
 <textarea id="inputText" class="w-full h-48 bg-surface-container-low border-none rounded-xl p-6 text-on-surface placeholder:text-outline/50 focus:ring-2 focus:ring-primary-container transition-all resize-none" placeholder="Paste your content here to begin analysis..."></textarea>
 <div class="flex items-center justify-between mt-6">
-<div class="flex gap-2">
-<button class="px-4 py-2 rounded-lg bg-surface-container-high text-on-primary-fixed-variant text-sm font-semibold flex items-center gap-2 hover:bg-surface-variant transition-colors">
-<span class="material-symbols-outlined text-lg">link</span>
-                                    Fetch URL
-                                </button>
-<button class="px-4 py-2 rounded-lg bg-surface-container-high text-on-primary-fixed-variant text-sm font-semibold flex items-center gap-2 hover:bg-surface-variant transition-colors">
-<span class="material-symbols-outlined text-lg">upload_file</span>
-                                    Upload File
-                                </button>
-</div>
-<button id="runBtn" onclick="runClassification()" class="bg-gradient-to-r from-primary to-primary-container text-white px-8 py-3 rounded-full font-bold shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all">
+<button id="runBtn" onclick="runClassification()" class="bg-gradient-to-r from-primary to-primary-container text-white px-8 py-3 rounded-full font-bold shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all ml-auto">
                                 Run Classification
                             </button>
-</div>
-</div>
-<!-- History / Recent Snippets -->
-<div class="grid grid-cols-2 gap-4">
-<div class="bg-surface-container-low rounded-xl p-6 hover:bg-surface-container transition-colors cursor-pointer group">
-<span class="material-symbols-outlined text-primary mb-3">history</span>
-<h4 class="font-bold text-on-surface">Customer Feedback A</h4>
-<p class="text-sm text-secondary line-clamp-2 mt-1">"The service was exceptional, but the delivery time could be improved..."</p>
-</div>
-<div class="bg-surface-container-low rounded-xl p-6 hover:bg-surface-container transition-colors cursor-pointer group">
-<span class="material-symbols-outlined text-primary mb-3">article</span>
-<h4 class="font-bold text-on-surface">News Digest 04</h4>
-<p class="text-sm text-secondary line-clamp-2 mt-1">"Global markets showed resilience today as central banks hinted..."</p>
 </div>
 </div>
 </section>

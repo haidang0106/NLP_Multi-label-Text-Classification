@@ -1,23 +1,27 @@
 # HARNN — Phân Loại Văn Bản Đa Nhãn Phân Cấp Tiếng Việt
 
-Huấn luyện và triển khai mô hình **HARNN** (Hierarchical Attention Recurrent Neural Network) để phân loại bài báo tiếng Việt theo 3 cấp độ nhãn:
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-2.0+-ee4c2c.svg)](https://pytorch.org/)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+
+Huấn luyện và triển khai mô hình **HARNN** (Hierarchical Attention Recurrent Neural Network) để phân loại bài báo tiếng Việt theo **3 cấp độ nhãn**:
 
 ```
-L1 (lĩnh vực) → L2 (lĩnh vực con) → L3 (chi tiết)
+L1 (Lĩnh vực) → L2 (Lĩnh vực con) → L3 (Chi tiết)
 ```
 
-**Kết quả trên tập test:**
+## Kết Quả Đánh Giá
 
-| Cấp độ | Precision | Recall | F1 |
-|--------|-----------|--------|----|
-| L1     | 0.931     | 0.931  | 0.931 |
-| L2     | 0.779     | 0.784  | 0.781 |
-| L3     | 0.795     | 0.795  | 0.795 |
-| **Global** | — | — | **0.836** |
+| Cấp độ | Precision | Recall | F1-Score |
+|--------|-----------|--------|----------|
+| **L1** | 0.931     | 0.931  | 0.931    |
+| **L2** | 0.779     | 0.784  | 0.781    |
+| **L3** | 0.795     | 0.795  | 0.795    |
+| **Global** | —     | —      | **0.836** |
 
 ---
 
-## Cài Đặt
+## Hướng Dẫn Cài Đặt
 
 ### 1. Tạo và kích hoạt virtual environment
 
@@ -26,16 +30,17 @@ py -3.10 -m venv .venv
 .venv\Scripts\activate
 ```
 
-### 2. Cài đặt PyTorch (CUDA 11.8)
+### 2. Cài đặt PyTorch
 
+**GPU (CUDA 11.8):**
 ```bash
 pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 ```
 
-> Nếu dùng CPU, bỏ `--index-url`:
-> ```bash
-> pip install torch torchvision torchaudio
-> ```
+**CPU:**
+```bash
+pip install torch torchvision torchaudio
+```
 
 ### 3. Cài đặt các thư viện phụ thuộc
 
@@ -45,27 +50,13 @@ pip install -r requirements.txt
 
 ---
 
-## Dataset
+## Chuẩn Bị Dữ Liệu
 
-### Nguồn dữ liệu hiện tại
+```bash
+python data/load_hf_dataset.py
+```
 
-- **Nguồn**: Bài báo từ VnExpress
-- **Tổng số**: 23,660 bài báo
-- **Chia tập**: Train=18,865 / Val=2,353 / Test=2,362
-- **Nhãn**: L1=12, L2=47, L3=20
-- **Vocabulary**: 69,481 từ (min count=3, min tokens=20)
-
-### Dữ liệu của bạn
-
-> **Dán link raw data của bạn vào đây:**
->
-> Link: [________________________________________]
->
-> Mô tả dữ liệu:
-> - Nguồn:
-> - Số lượng mẫu:
-> - Số cấp độ nhãn:
-> - Định dạng: (JSON / CSV / ...)
+Script này tải dataset từ [HuggingFace](https://huggingface.co/datasets/dat7505/hierarchical_multi_label_dataset) và lưu vào `data/raw_data.json`.
 
 ---
 
@@ -78,7 +69,7 @@ pip install -r requirements.txt
    python app.py
    ```
 2. Mở file `demo_ui/code.html` bằng trình duyệt
-3. Dán văn bản tiếng Việt và nhấn "Run Classification"
+3. Dán văn bản tiếng Việt và nhấn **"Run Classification"**
 
 ### Tùy chọn B: Jupyter Notebook
 
@@ -99,8 +90,101 @@ curl -X POST http://localhost:8000/api/predict \
   -d "{\"text\": \"Google chi 1 ty USD de dao tao AI tai cac truong dai hoc My\"}"
 ```
 
-Kết quả trả về:
+---
 
+## Cấu Trúc Dự Án
+
+```
+NLP_Multi-label-Text-Classification/
+├── app.py                          # FastAPI REST API server
+├── requirements.txt                # Python dependencies
+├── README.md                       # File này
+├── .gitignore                      # Git ignore rules
+├── link_data.txt                   # Link HuggingFace dataset
+│
+├── data/
+│   ├── load_hf_dataset.py          # Script tải dataset
+│   ├── raw_data.json               # Dữ liệu gốc (gitignored, tự sinh)
+│   └── dictionary/
+│       ├── vietnamese-stopwords.txt
+│       └── vietnamese-stopwords-dash.txt
+│
+├── notebooks/
+│   └── main_workflow.ipynb         # Pipeline đầy đủ: preprocess → train → predict → evaluate
+│
+├── demo_ui/
+│   ├── code.html                   # Frontend (TailwindCSS)
+│   ├── DESIGN.md                   # Tài liệu design system
+│   └── screen.png                  # Ảnh chụp giao diện
+│
+└── output/
+    ├── models/checkpoints/         # Model weights (gitignored)
+    ├── results/                    # Training history & evaluation metrics
+    └── figures/                    # Confusion matrices & learning curves
+```
+
+---
+
+## Kiến Trúc Mô Hình
+
+**HARNN** (Hierarchical Attention Recurrent Neural Network):
+
+```
+Input tokens → Embedding (69,481 × 100) → BiGRU (256, bidirectional)
+  → Per-level Attention → LSTMCell (hierarchical memory)
+  → Linear classifiers × 3 (mỗi classifier cho một cấp nhãn)
+  → Sigmoid outputs (multi-label)
+```
+
+### Thiết Kế Chính
+
+- **Word2Vec** (skip-gram, 100d) cho word embeddings
+- **BiGRU** cho ngữ cảnh mức văn bản
+- **Per-level attention** để nắm bắt đặc trưng riêng cho từng cấp nhãn
+- **LSTMCell** để lan truyền thông tin phân cấp giữa các cấp
+- **Sigmoid** outputs cho bài toán multi-label classification
+
+### Hyperparameters
+
+| Tham số | Giá trị |
+|---------|---------|
+| Embedding dim | 100 |
+| Hidden size | 256 |
+| Max sequence length | 512 |
+| Optimizer | Adam |
+| Learning rate | 3e-4 |
+| Epochs | 10 |
+| Batch size | 64 |
+| Dropout | 0.5 |
+
+---
+
+## Dataset
+
+| Thống kê | Giá trị |
+|----------|---------|
+| Nguồn | Bài báo VnExpress |
+| Tổng số mẫu | 23,660 |
+| Train / Val / Test | 18,865 / 2,353 / 2,362 |
+| Lớp L1 | 12 |
+| Lớp L2 | 47 |
+| Lớp L3 | 20 |
+| Vocabulary size | 69,481 (min count=3, min tokens=20) |
+
+---
+
+## API Reference
+
+### `POST /api/predict`
+
+**Request:**
+```json
+{
+  "text": "Google chi 1 ty USD de dao tao AI tai cac truong dai hoc My"
+}
+```
+
+**Response:**
 ```json
 {
   "l1": [{"label": "Khoa hoc", "prob": 0.92}],
@@ -112,80 +196,9 @@ Kết quả trả về:
 
 ---
 
-## Cấu Trúc Dự Án
+## License
 
-```
-Multi-Label-Text-Classification/
-├── app.py                          # FastAPI backend (POST /api/predict)
-├── requirements.txt                # Các thư viện Python
-├── README.md                       # File này
-│
-├── notebooks/
-│   └── main_workflow.ipynb         # Pipeline đầy đủ: preprocess → train → predict → evaluate
-│
-├── data/
-│   ├── dictionary/
-│   │   ├── vietnamese-stopwords.txt
-│   │   └── vietnamese-stopwords-dash.txt
-│   ├── process_data/
-│   │   ├── dataset.json            # Dữ liệu đã tiền xử lý
-│   │   ├── vocab.json              # Ánh xạ word → index
-│   │   └── label_map.json          # Ánh xạ label → index theo từng cấp
-│   ├── raw_data.json               # 23,660 bài báo VnExpress gốc
-│   ├── train_data.json             # Tập train (tự sinh)
-│   └── test_data.json              # Tập test (tự sinh)
-│
-├── demo_ui/
-│   ├── code.html                   # Giao diện web (TailwindCSS frontend)
-│   ├── DESIGN.md                   # Tài liệu design system
-│   └── screen.png                  # Ảnh chụp giao diện
-│
-└── output/
-    ├── models/
-    │   ├── checkpoints/
-    │   │   └── best_model.pt       # Model checkpoint đã huấn luyện
-    │   └── word2vec.model          # Word2Vec pre-trained
-    ├── results/
-    │   └── train_history.json      # Metrics huấn luyện theo epoch
-    ├── figures/
-    │   ├── learning_curve.png
-    │   ├── confusion_matrix_l1_full.png
-    │   ├── confusion_matrix_l2_top20_norm.png
-    │   ├── confusion_matrix_l3_top25_norm.png
-    │   └── basic_metrics_multiclass.png
-    └── log/
-```
-
----
-
-## Kiến Trúc Mô Hình
-
-**HARNN** (Hierarchical Attention Recurrent Neural Network):
-
-```
-Input tokens → Embedding (69,481 × 100) → BiGRU (256, bidirectional)
-  → Level-specific Attention → LSTMCell (hierarchical memory)
-  → Linear classifiers × 3 (mỗi classifier cho một cấp nhãn)
-```
-
-Thiết kế chính:
-- **Word2Vec** (skip-gram, 100d) cho word embeddings
-- **BiGRU** cho ngữ cảnh mức văn bản
-- **Per-level attention** để nắm bắt đặc trưng riêng cho từng nhãn
-- **LSTMCell** để lan truyền thông tin phân cấp giữa các cấp
-- **Sigmoid** outputs cho bài toán multi-label classification
-
-Hyperparameters:
-
-| Tham số | Giá trị |
-|---------|---------|
-| Embedding dim | 100 |
-| Hidden size | 256 |
-| Max sequence length | 512 |
-| Optimizer | Adam (lr=3e-4) |
-| Epochs | 10 |
-| Batch size | 64 |
-| Dropout | 0.5 |
+MIT
 
 ---
 
@@ -193,4 +206,4 @@ Hyperparameters:
 
 Van Lam et al. *"Exploring Hierarchical Multi-Label Text Classification Models using Attention-Based Approaches for Vietnamese language"*. NLPIR 2023.
 
-DOI: https://dl.acm.org/doi/10.1145/3639233.3639244
+DOI: [10.1145/3639233.3639244](https://dl.acm.org/doi/10.1145/3639233.3639244)
