@@ -173,28 +173,6 @@ Input tokens → Embedding (69,481 × 100) → BiGRU (256, bidirectional)
 
 ---
 
-## API Reference
-
-### `POST /api/predict`
-
-**Request:**
-```json
-{
-  "text": "Google chi 1 ty USD de dao tao AI tai cac truong dai hoc My"
-}
-```
-
-**Response:**
-```json
-{
-  "l1": [{"label": "Khoa hoc", "prob": 0.92}],
-  "l2": [{"label": "AI", "prob": 0.87}],
-  "l3": [{"label": "Machine Learning", "prob": 0.65}],
-  "tokens": ["google", "chi", "ty", "usd", "dao_tao", "ai"]
-}
-```
-
----
 
 ## License
 
