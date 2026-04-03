@@ -62,18 +62,9 @@ Script này tải dataset từ [HuggingFace](https://huggingface.co/datasets/dat
 
 ## Cách Chạy
 
-### Tùy chọn A: Web Demo
+### Bước 1: Huấn luyện mô hình
 
-1. Khởi chạy backend:
-   ```bash
-   python app.py
-   ```
-2. Mở file `demo_ui/code.html` bằng trình duyệt
-3. Dán văn bản tiếng Việt và nhấn **"Run Classification"**
-
-### Tùy chọn B: Jupyter Notebook
-
-Chạy file `notebooks/main_workflow.ipynb` từ đầu đến cuối. Notebook gồm 4 phần:
+Chạy file `notebooks/main_workflow.ipynb` từ đầu đến cuối để tiền xử lý dữ liệu, huấn luyện mô hình và tạo checkpoint. Notebook gồm 4 phần:
 
 | Phần | Cells | Mô tả |
 |------|-------|-------|
@@ -82,8 +73,17 @@ Chạy file `notebooks/main_workflow.ipynb` từ đầu đến cuối. Notebook 
 | 3. Dự đoán | 3.1–3.3 | Load checkpoint và dự đoán trên văn bản mới |
 | 4. Đánh giá | 4.1–4.3 | Confusion matrices và macro/micro metrics |
 
-### Tùy chọn C: Gọi API
+### Bước 2: Triển khai (tùy chọn)
 
+Sau khi có model checkpoint (`output/models/checkpoints/best_model.pt`), bạn có thể:
+
+**Web Demo:**
+```bash
+python app.py
+```
+Mở file `demo_ui/code.html` bằng trình duyệt, dán văn bản và nhấn **"Run Classification"**.
+
+**Gọi API:**
 ```bash
 curl -X POST http://localhost:8000/api/predict \
   -H "Content-Type: application/json" \
@@ -170,29 +170,6 @@ Input tokens → Embedding (69,481 × 100) → BiGRU (256, bidirectional)
 | Lớp L2 | 47 |
 | Lớp L3 | 20 |
 | Vocabulary size | 69,481 (min count=3, min tokens=20) |
-
----
-
-## API Reference
-
-### `POST /api/predict`
-
-**Request:**
-```json
-{
-  "text": "Google chi 1 ty USD de dao tao AI tai cac truong dai hoc My"
-}
-```
-
-**Response:**
-```json
-{
-  "l1": [{"label": "Khoa hoc", "prob": 0.92}],
-  "l2": [{"label": "AI", "prob": 0.87}],
-  "l3": [{"label": "Machine Learning", "prob": 0.65}],
-  "tokens": ["google", "chi", "ty", "usd", "dao_tao", "ai"]
-}
-```
 
 ---
 
